@@ -80,7 +80,7 @@ class Merge extends Sort {
   }
 
   async sort (numbers, push, indexMin = 0, indexMax = numbers.length - 1) {
-    await this._sort(numbers, push, indexMin, indexMax)
+    return this._sort(numbers, push, indexMin, indexMax)
   }
 }
 

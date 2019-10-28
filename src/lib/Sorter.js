@@ -12,6 +12,7 @@ class Sorter {
       Merge
     }
     this.numbers = numbers
+    this.done = () => {}
   }
 
   set numbers (numbers) {
@@ -35,8 +36,9 @@ class Sorter {
     return this._sort
   }
 
-  sort (start) {
-    this.sortAlgo.sort(this.numbers, start)
+  async sort (start) {
+    await this.sortAlgo.sort(this.numbers, start)
+    this.done()
   }
 }
 
