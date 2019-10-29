@@ -1,6 +1,7 @@
 import Bubble from './Bubble'
 import Selection from './Selection'
 import Merge from './Merge'
+import Quicksort from './Quicksort'
 
 class Sorter {
   constructor (numbers = []) {
@@ -9,7 +10,8 @@ class Sorter {
     this._algorithms = {
       Bubble,
       Selection,
-      Merge
+      Merge,
+      Quicksort
     }
     this.numbers = numbers
     this.done = () => {}

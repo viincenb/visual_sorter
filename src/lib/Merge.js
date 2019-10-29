@@ -5,16 +5,6 @@ class Merge extends Sort {
     super('Merge')
   }
 
-  _move (numbers, push, from, to) {
-    return push(numbers.move(from, to)).process()
-  }
-
-  _inspect (numbers, push, index) {
-    const inspect = push(numbers.inspect(index))
-
-    return inspect.process()
-  }
-
   async _merge (numbers, push, a, b) {
     return new Promise(async (resolve, reject) => {
       let   indexToMove = a.min

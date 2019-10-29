@@ -1,22 +1,27 @@
 <template>
   <div id="app">
     <div class="toolbar">
-      <span><span class="legend inspect"></span>{{inspectsCount}}</span>
-      <span><span class="legend swap"></span>{{swapsCount}}</span>
-      <span><span class="legend move"></span>{{movesCount}}</span>
-      <input v-model="tick" type="number">
-      <input v-model="size" @change="shuffle" type="number">
-      <select v-model="algorithm">
-        <option v-for="algoName in algorithms" :key="algoName" :value="algoName">{{algoName}}</option>
-      </select>
-      <button @click="reset"><font-awesome-icon :icon="['fas', 'sync']" /></button>
-      <button @click="shuffle"><font-awesome-icon :icon="['fas', 'random']" /></button>
-      <button @click="undoAction"><font-awesome-icon :icon="['fas', 'step-backward']" /></button>
-      <button @click="rewind"><font-awesome-icon :icon="['fas', 'backward']" /></button>
-      <button v-if="!running" @click="play"><font-awesome-icon :icon="['fas', 'play']" /></button>
-      <button v-if="running" @click="stop"><font-awesome-icon :icon="['fas', 'pause']" /></button>
-      <button @click="forward"><font-awesome-icon :icon="['fas', 'forward']" /></button>
-      <button @click="doAction"><font-awesome-icon :icon="['fas', 'step-forward']" /></button>
+      <div class="main">
+        <input v-model="tick" type="number">
+        <input v-model="size" @change="shuffle" type="number">
+        <select v-model="algorithm">
+          <option v-for="algoName in algorithms" :key="algoName" :value="algoName">{{algoName}}</option>
+        </select>
+        <button class="button transparent" @click="reset"><font-awesome-icon :icon="['fas', 'sync']" /></button>
+        <button class="button transparent" @click="shuffle"><font-awesome-icon :icon="['fas', 'random']" /></button>
+        <button class="button transparent" @click="undoAction"><font-awesome-icon :icon="['fas', 'step-backward']" /></button>
+        <button class="button transparent" :class="{ active: playDirection === -1 }" @click="rewind"><font-awesome-icon :icon="['fas', 'backward']" /></button>
+        <button class="button transparent" v-if="!running" @click="play"><font-awesome-icon :icon="['fas', 'play']" /></button>
+        <button class="button transparent" v-if="running" @click="stop"><font-awesome-icon :icon="['fas', 'pause']" /></button>
+        <button class="button transparent" :class="{ active: playDirection === 1 }" @click="forward"><font-awesome-icon :icon="['fas', 'forward']" /></button>
+        <button class="button transparent" @click="doAction"><font-awesome-icon :icon="['fas', 'step-forward']" /></button>
+      </div>
+
+      <div class="subbar">
+        <div class="legend inspect">{{inspectsCount}}</div>
+        <div class="legend swap">{{swapsCount}}</div>
+        <div class="legend move">{{movesCount}}</div>
+      </div>
     </div>
     <div class="row jcenter">
       <div
@@ -69,7 +74,7 @@ export default {
   computed : {
     algorithms: {
       get () {
-        return ['Merge', 'Bubble', 'Selection']
+        return ['Merge', 'Bubble', 'Selection', 'Quicksort']
       }
     },
     algorithm: {
@@ -86,7 +91,7 @@ export default {
     shuffle () {
       this.initialNumbers = []
       for (let i = 0; i < this.size; i++) {
-        this.initialNumbers.push(Math.floor(Math.random() * 100))
+        this.initialNumbers.push(Math.random() * 100)
       }
       this.reset()
     },
@@ -209,7 +214,7 @@ export default {
     }
   },
   created () {
-    this.algorithm = 'Merge'
+    this.algorithm = 'Quicksort'
     this.shuffle()
   }
 }
@@ -231,24 +236,46 @@ body {
 }
 
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: Roboto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
 }
 
 .toolbar {
-  background: #222;
-  padding: 1em 0;
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
 
-  & > * {
-    margin: 0 .2em;
+  .main {
+    background: #222;
+    padding: 1em 0;
+    display: flex;
+    justify-content: center;
+
+    & > * {
+      margin: 0 .2em;
+    }
+  }
+
+  .subbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    & > .legend {
+      margin: 0 .2em;
+      min-width: 20pt;
+      min-height: 20pt;
+      line-height: 20pt;
+      text-align: center;
+      border-radius: 25pt;
+      padding: .2em .5em;
+      font-weight: 500;
+    }
   }
 }
 
@@ -270,10 +297,6 @@ body {
 }
 
 .legend {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-
   &.inspect {
     background: red;
   }
@@ -292,10 +315,27 @@ body {
   flex-direction: row;
   align-items: flex-end;
   height: 100vh;
-  padding-top: 4em;
+  padding-top: 7em;
 }
 
 .jcenter {
   justify-content: center;
+}
+
+.button {
+  height: 2.5em;
+  border: 0 none;
+  padding: 0 1em;
+  border-radius: 2pt;
+  cursor: pointer;
+
+  &.transparent {
+    background: transparent;
+    color: #fff;
+
+    &.active {
+      background: #000;
+    }
+  }
 }
 </style>
